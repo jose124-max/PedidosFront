@@ -8,7 +8,6 @@ const CrearBodegaForm = () => {
   const [sucursales, setSucursales] = useState([]);
 
   useEffect(() => {
-    // Obtener la lista de sucursales al cargar el componente
     const fetchSucursales = async () => {
       try {
         const response = await fetch('http://pedidosbak-production.up.railway.app/sucursal/sucusarleslist/');
