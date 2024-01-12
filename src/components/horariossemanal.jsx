@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 const HorariosSemanales = () => {
-    // Aquí puedes definir tus estados y lógica necesarios
 
     useEffect(() => {
-        // Lógica que se ejecuta al montar o cambiar ciertos valores de dependencia
-        // Puedes realizar fetch o cualquier operación asíncrona aquí
         return () => {
-            // Limpieza si es necesario al desmontar el componente
         };
-    }, []); // Asegúrate de poner las dependencias correctas
-
-    // Aquí puedes definir más funciones o lógica necesaria
+    }, []);
 
     return (
         <>

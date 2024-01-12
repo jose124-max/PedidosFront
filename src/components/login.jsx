@@ -14,7 +14,7 @@ const LoginForm = ({ onLogin }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            token: localStorage.getItem('token'), // Obtener el token almacenado
+            token: localStorage.getItem('token'),
           }),
         });
 
@@ -22,28 +22,21 @@ const LoginForm = ({ onLogin }) => {
           const data = await response.json();
           const rol = data.rol;
 
-          // Puedes realizar acciones con el rol recibido si es necesario
-
-          // Ejemplo de redirección basada en el rol
           if (rol === 'S') {
             window.location.href = '/home';
           }
         } else {
-          // Manejar errores de la solicitud a la API
           console.log('error');
         }
       } catch (error) {
-        // Manejar errores de la solicitud
         console.error('Error en la solicitud:', error);
       }
     };
 
-    // Llamar a la función fetchData al cargar el componente
     fetchData();
   }, []);
   const onFinish = async (values) => {
     try {
-      // Realizar la solicitud a la API para iniciar sesión
       const response = await fetch('https://pedidosbak-production.up.railway.app/Login/iniciar_sesion/', {
         method: 'POST',
         headers: {
@@ -56,7 +49,7 @@ const LoginForm = ({ onLogin }) => {
       });
 
       const data = await response.json();
-      console.log(data); // Verifica si el token está presente en la respuesta
+      console.log(data);
 
       if (response.ok) {
         const token = data.token;
@@ -69,7 +62,6 @@ const LoginForm = ({ onLogin }) => {
         }, 24 * 60 * 60 * 1000);
         onLogin(data);
       } else {
-        // Manejar errores de inicio de sesión
         console.error('Error en inicio de sesión:', data.mensaje);
         message.error(data.mensaje);
       }

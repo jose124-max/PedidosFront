@@ -32,7 +32,6 @@ const CrearComponenteForm = () => {
   const onFinish = async (values) => {
     setLoading(true);
 
-    // Verificar si el campo costo está vacío y establecerlo en 0.00 si es así
     if (values.costo === undefined || values.costo === null || values.costo === '') {
       values.costo = 0.00;
     }

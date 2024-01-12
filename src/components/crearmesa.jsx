@@ -22,10 +22,8 @@ const CrearMesa = () => {
         const data = await response.json();
         console.log('Respuesta del servidor:', data);
 
-        // Mostrar mensaje de éxito
         message.success('Mesa creada con éxito');
 
-        // Limpiar el formulario
         form.resetFields();
       } else {
         throw new Error(`Error en la solicitud: ${response.statusText}`);
@@ -33,7 +31,6 @@ const CrearMesa = () => {
     } catch (error) {
       console.error('Error al enviar la solicitud:', error.message);
 
-      // Mostrar mensaje de error
       message.error('Error al crear la mesa. Por favor, inténtalo de nuevo.');
     }
   };

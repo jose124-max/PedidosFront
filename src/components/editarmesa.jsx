@@ -7,7 +7,6 @@ const EditarMesa = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // Hacer la solicitud a tu API para obtener las mesas
     fetch('https://pedidosbak-production.up.railway.app/Mesas/ver_mesas/')
       .then(response => response.json())
       .then(data => setMesas(data.mesas))
@@ -36,13 +35,11 @@ const EditarMesa = () => {
       formData.append('activa', values.activa);
       formData.append('max_personas', values.max_personas);
 
-      // Hacer la solicitud a tu API para editar la mesa
       await fetch(`https://pedidosbak-production.up.railway.app/Mesas/editar_mesa/${mesa_id}/`, {
         method: 'POST',
         body: formData,
       });
 
-      // Actualizar la lista de mesas después de la edición
       fetch('https://pedidosbak-production.up.railway.app/Mesas/ver_mesas/')
         .then(response => response.json())
         .then(data => setMesas(data.mesas))
@@ -50,11 +47,9 @@ const EditarMesa = () => {
 
       hideModal();
       
-      // Mostrar mensaje de éxito
       message.success('Mesa editada con éxito');
     } catch (error) {
       console.error('Error al editar la mesa:', error);
-      // Mostrar mensaje de error
       message.error('Error al editar la mesa');
     }
   };
@@ -82,7 +77,6 @@ const EditarMesa = () => {
       dataIndex: 'estado',
       key: 'estado',
       render: estado => {
-        // Mapear valores de estado
         const estadoMapping = {
           'D': 'Disponible',
           'R': 'Reservada',

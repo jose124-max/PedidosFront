@@ -8,7 +8,6 @@ const CrearEmpleadoForm = ({ }) => {
   const [sucursales, setSucursales] = useState([]);
 
   useEffect(() => {
-    // Obtener la lista de sucursales al cargar el componente
     const fetchSucursales = async () => {
       try {
         const response = await fetch('https://pedidosbak-production.up.railway.app/sucursal/sucusarleslist/');
@@ -20,7 +19,7 @@ const CrearEmpleadoForm = ({ }) => {
     };
 
     fetchSucursales();
-  }, []); // Se ejecuta solo al montar el componente
+  }, []);
 
   const onFinish = async (values) => {
     try {

@@ -160,7 +160,6 @@ const AdminSucursal = ({ idsucursalx }) => {
                 formData.append('imagensucursal', fileList[0].originFileObj);
             } else {
                 console.error('Tipo de archivo no válido');
-                // Puedes mostrar un mensaje de error o tomar otras acciones apropiadas.
             }
             const response = await fetch('https://pedidosbak-production.up.railway.app/sucursal/EditarSucursal/' + idsucursalx, {
                 method: 'POST',

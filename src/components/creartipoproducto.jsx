@@ -23,7 +23,6 @@ const CrearTipoProducto = () => {
       if (response.ok) {
         message.success('Tipo de Producto creado exitosamente');
         form.resetFields();
-        // Puedes realizar otras acciones después de un éxito, si es necesario
       } else {
         message.error(data.error || 'Hubo un error al realizar la solicitud');
       }

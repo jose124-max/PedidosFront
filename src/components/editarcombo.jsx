@@ -66,7 +66,6 @@ const EditarCombo = () => {
       }
 
       message.success('Combo editado con éxito');
-      // Actualizar la lista de combos después de la edición
       fetchCombos();
       handleCloseModal();
 

@@ -39,13 +39,10 @@ const CrearHorariosSemanales = ({ onHorarioCreate }) => {
             }
         });
 
-        // Puedes imprimir el JSON en la consola o enviarlo a tu backend
         console.log('JSON de Horario:', formattedData);
 
-        // Puedes almacenar el JSON en el estado o realizar cualquier otra acción necesaria
         onHorarioCreate({ Detalles: formattedData });
 
-        // Agrega el mensaje de éxito o cualquier otra lógica de manejo
         message.success('Horario creado exitosamente');
     };
 

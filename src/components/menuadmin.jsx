@@ -66,7 +66,7 @@ const Admin = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            token: localStorage.getItem('token'), // Obtener el token almacenado
+            token: localStorage.getItem('token'),
           }),
         });
 
@@ -74,27 +74,20 @@ const Admin = () => {
           const data = await response.json();
           const rol = data.rol;
 
-          // Puedes realizar acciones con el rol recibido si es necesario
-
-          // Ejemplo de redirección basada en el rol
           if (rol !== 'S') {
             window.location.href = '/';
           }
         } else {
-          // Manejar errores de la solicitud a la API
           window.location.href = '/';
         }
       } catch (error) {
-        // Manejar errores de la solicitud
         console.error('Error en la solicitud:', error);
       }
     };
 
-    // Llamar a la función fetchData al cargar el componente
     fetchData();
-  }, []); // Dependencia vacía para que se ejecute solo una vez al montar el componente
+  }, []);
   const handleClearLocalStorage = () => {
-    // Limpiar todo el localStorage
     window.location.href = '/';
     localStorage.clear();
 

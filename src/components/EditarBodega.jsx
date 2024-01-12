@@ -39,7 +39,7 @@ const ListarEditarBodegas = () => {
 
   const handleEditar = (record) => {
     form.setFieldsValue(record);
-    setEditingBodega(record);  // No necesitas comprobar record.id aquí
+    setEditingBodega(record);
     setVisible(true);
   };
 

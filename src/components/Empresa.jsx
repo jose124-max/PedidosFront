@@ -78,7 +78,6 @@ const Empresa = () => {
       formData.append('eslogan', values.eslogan);
     }
 
-    // Agregar el campo 'logo' solo si se selecciona un archivo
     if (values.logo && values.logo.length > 0) {
       formData.append('elogo', values.logo[0].originFileObj);
     }
@@ -92,11 +91,9 @@ const Empresa = () => {
       if (respuesta.ok) {
         message.success('Datos de la empresa actualizados correctamente');
         setEditModalVisible(false);
-        // Obtener información actualizada después de la edición
         obtenerInformacionEmpresa();
       } else {
         message.error('Error al editar la información de la empresa');
-        // Puedes manejar la respuesta de otra manera si es necesario
         console.log(await respuesta.text());
       }
     } catch (error) {

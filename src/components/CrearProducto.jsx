@@ -44,10 +44,9 @@ const CrearProducto = () => {
     };
     fetchCategorias();
     fetchUnidadesMedida();
-  }, []); // Se ejecuta solo una vez al montar el componente
+  }, []);
 
   useEffect(() => {
-    // Este efecto se ejecuta cuando cambia el valor de 'imagen_p' en el formulario
     const imagenValue = form.getFieldValue('imagen_p');
     console.log(imagenValue);
     if (imagenValue) {
@@ -56,11 +55,11 @@ const CrearProducto = () => {
           uid: '-1',
           name: 'Imagen existente',
           status: 'done',
-          url: imagenValue, // Ajusta esto según la estructura de tus datos
+          url: imagenValue,
         },
       ]);
     }
-  }, [form.getFieldValue('imagen_p')]); // Se ejecuta cuando cambia 'imagen_p'
+  }, [form.getFieldValue('imagen_p')]);
 
   const onFinish = async (values) => {
     try {

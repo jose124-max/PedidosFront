@@ -22,12 +22,10 @@ const CrearCategoria = () => {
   };
 
   const handleOk = () => {
-    // Puedes realizar acciones adicionales aquí si es necesario
     setModalVisible(false);
   };
 
   const handleCancel = () => {
-    // Puedes realizar acciones adicionales aquí si es necesario
     setModalVisible(false);
   };
 
@@ -47,7 +45,6 @@ const CrearCategoria = () => {
 
   const handleChange = (info) => {
     if (info.fileList.length > 1) {
-      // Si hay más de un archivo en la lista, conserva solo el último
       info.fileList = [info.fileList.shift()];
     }
     setImagenCategoria(info.fileList.length > 0 ? info.fileList[0].originFileObj : null);
@@ -73,10 +70,8 @@ const CrearCategoria = () => {
 
       if (response.ok) {
         message.success('Categoría creada con éxito');
-        // Limpiar el formulario y la imagen después del éxito
         form.resetFields();
         setImagenCategoria(null);
-        // Puedes realizar otras acciones después de un éxito, si es necesario
       } else {
         message.error(data.error || 'Hubo un error al realizar la solicitud');
       }

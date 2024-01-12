@@ -9,7 +9,6 @@ const EditarTipoProducto = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    // Obtener la lista de tipos de productos al cargar el componente
     fetch('https://pedidosbak-production.up.railway.app/producto/listarproductos/')
       .then(response => response.json())
       .then(data => setTiposProductos(data.tipos_productos))
@@ -42,10 +41,8 @@ const EditarTipoProducto = () => {
     setTipoProductoId(id);
     setModalVisible(true);
 
-    // Obtener los detalles del tipo de producto seleccionado
     const tipoProductoSeleccionado = data.find(tipo => tipo.id_tipoproducto === id);
 
-    // Establecer los valores iniciales en el formulario
     form.setFieldsValue({
       name: tipoProductoSeleccionado.tpnombre,
       description: tipoProductoSeleccionado.descripcion,
@@ -75,7 +72,6 @@ const EditarTipoProducto = () => {
         message.success(responseData.mensaje);
         setModalVisible(false);
 
-        // Actualizar la lista de tipos de productos después de la edición
         fetch('https://pedidosbak-production.up.railway.app/producto/listarproductos/')
           .then(response => response.json())
           .then(data => setTiposProductos(data.tipos_productos))
