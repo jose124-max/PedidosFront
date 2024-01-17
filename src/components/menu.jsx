@@ -15,7 +15,6 @@ import Sucursales from './sucursales.jsx';
 import subsidiario from './res/subsidiario.png'
 import EditarProducto from './editarproducto.jsx';
 import Combos from './combo.jsx';
-import Bodegas from './bodegas.jsx';
 import Mesas from './editarmesa.jsx';
 import EditarBodegaForm from './editarbodega.jsx';
 
