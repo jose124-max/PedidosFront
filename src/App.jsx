@@ -3,10 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './components/login';
 import RegisterForm from './components/registro';
 import AdminMenu from './components/adminmenu';
-{
-  /* The following line can be included in your src/index.js or App.js file */
-}
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const App = () => {
   const [user, setUser] = useState(null);
