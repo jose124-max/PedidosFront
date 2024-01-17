@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './components/login';
 import RegisterForm from './components/registro';
-import MenuAdmin from './components/menuadmin';
+import AdminMenu from './components/adminmenu';
+{
+  /* The following line can be included in your src/index.js or App.js file */
+}
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -14,7 +18,7 @@ const App = () => {
   const renderContent = () => {
     const storedToken = localStorage.getItem('token');
     if (user) {
-        return <MenuAdmin />;
+        return <AdminMenu />;
     }
     return <LoginForm onLogin={handleLogin} />;
   };
@@ -24,7 +28,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={renderContent()} />
         <Route path="/registro" element={<RegisterForm />} />
-        <Route path="/home" element={<MenuAdmin />} />
+        <Route path="/home" element={<AdminMenu />} />
       </Routes>
     </Router>
   );
