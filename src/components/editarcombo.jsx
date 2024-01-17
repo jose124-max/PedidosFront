@@ -30,9 +30,52 @@ const EditarCombo = () => {
     setSelectedCombo(null);
   };
 
+<<<<<<< HEAD
   if (!combos) {
     return <div>Cargando...</div>;
   }
+=======
+  const onFinish = async (values) => {
+    try {
+      const formData = new FormData();
+      formData.append('id_catcombo', values.id_catcombo);
+      formData.append('puntoscb', values.puntoscb);
+      formData.append('nombrecb', values.nombrecb);
+      formData.append('descripcioncombo', values.descripcioncombo);
+      formData.append('preciounitario', values.preciounitario);
+
+      const response = await fetch(`https://pedidosbak-production.up.railway.app/combos/editarcombo/${selectedCombo.id_combo}/`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al editar combo');
+      }
+
+      message.success('Combo editado con éxito');
+      fetchCombos();
+      handleCloseModal();
+
+    } catch (error) {
+      console.error('Error al editar combo:', error);
+      message.error('Error al editar combo');
+    }
+  };
+
+  const fetchCombos = async () => {
+    try {
+      const responseCombos = await fetch('https://pedidosbak-production.up.railway.app/combos/ver_combos/');
+      if (!responseCombos.ok) {
+        throw new Error('Error fetching combos');
+      }
+      const dataCombos = await responseCombos.json();
+      setCombos(dataCombos.combos);
+    } catch (error) {
+      console.error('Error fetching combos:', error);
+    }
+  };
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
 
   return (
     <div>

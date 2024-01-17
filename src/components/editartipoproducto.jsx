@@ -67,8 +67,15 @@ const EditarTipoProducto = () => {
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     console.log('SD');
     listarp();
+=======
+    fetch('https://pedidosbak-production.up.railway.app/producto/listarproductos/')
+      .then(response => response.json())
+      .then(data => setTiposProductos(data.tipos_productos))
+      .catch(error => console.error('Error fetching tipos de productos:', error));
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
   }, []);
 
   const columns = [
@@ -120,10 +127,15 @@ const EditarTipoProducto = () => {
 
   const handleEdit = (id) => {
     setTipoProductoId(id);
+<<<<<<< HEAD
     setOpenetp(true);
     const tipoProductoSeleccionado = data.find((tipo) => tipo.id_tipoproducto === id);
+=======
+    setModalVisible(true);
 
-    // Establecer los valores iniciales en el formulario
+    const tipoProductoSeleccionado = data.find(tipo => tipo.id_tipoproducto === id);
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
+
     form.setFieldsValue({
       name: tipoProductoSeleccionado.tpnombre,
       description: tipoProductoSeleccionado.descripcion,
@@ -150,7 +162,15 @@ const EditarTipoProducto = () => {
       if (response.ok) {
         message.success(responseData.mensaje);
         setModalVisible(false);
+<<<<<<< HEAD
         listarp();
+=======
+
+        fetch('https://pedidosbak-production.up.railway.app/producto/listarproductos/')
+          .then(response => response.json())
+          .then(data => setTiposProductos(data.tipos_productos))
+          .catch(error => console.error('Error fetching tipos de productos:', error));
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
       } else {
         message.error(responseData.error || 'Hubo un error al realizar la solicitud');
       }

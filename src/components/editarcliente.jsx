@@ -208,7 +208,6 @@ const EditarCliente = () => {
                     cliente.id_cliente === editingCliente.id_cliente ? { ...cliente, ...editingCliente } : cliente
                 );
                 setClientes(updatedClientes);
-                // Cerrar el modal de edición
                 handleCancel();
             } else {
                 console.error('Error al actualizar el cliente');

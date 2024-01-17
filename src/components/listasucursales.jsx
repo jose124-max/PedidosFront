@@ -124,7 +124,6 @@ const ListSucursales = () => {
     const handleCreateSucursal = () => {
         form.validateFields()
             .then((values) => {
-                // Enviar los datos al servidor para crear la sucursal
                 fetch('https://pedidosbak-production.up.railway.app/sucursal/crearsucursal/', {
                     method: 'POST',
                     body: JSON.stringify(values),

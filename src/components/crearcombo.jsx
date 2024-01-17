@@ -149,6 +149,10 @@ const NuevoComboForm = () => {
                 comboForm.resetFields();
                 setComboFileList([]);
                 setSelectedProducts([]);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
             } else {
                 const data = await response.json();
                 console.error('Error en la respuesta del servidor:', data);
@@ -224,7 +228,6 @@ const NuevoComboForm = () => {
         const isProductSelected = selectedProducts.some((selectedProduct) => selectedProduct.id_producto === product.id_producto);
 
         if (isProductSelected) {
-            // Si el producto ya está seleccionado, incrementa la cantidad en 1
             setSelectedProducts((prevSelected) =>
                 prevSelected.map((selectedProduct) =>
                     selectedProduct.id_producto === product.id_producto
@@ -233,13 +236,11 @@ const NuevoComboForm = () => {
                 )
             );
         } else {
-            // Si el producto no está seleccionado, agrégalo con una cantidad de 1
             setSelectedProducts((prevSelected) => [...prevSelected, { ...product, cantidad: 1 }]);
         }
     };
 
     const handleDeselectProduct = (productId) => {
-        // Elimina el producto seleccionado
         setSelectedProducts((prevSelected) => prevSelected.filter((product) => product.id_producto !== productId));
     };
     return (
@@ -515,9 +516,9 @@ const NuevoComboForm = () => {
                                 const isImage = /\.(png|jpg|jpeg)$/i.test(file.name);
                                 if (!isImage) {
                                     message.error('Por favor, selecciona una imagen válida.');
-                                    return false; // Evitar la carga del archivo no válido
+                                    return false;
                                 }
-                                return true; // Permitir la carga del archivo válido
+                                return true;
                             }}
                             accept=".png, .jpg, .jpeg"
                         > 

@@ -61,7 +61,7 @@ const CrearComponenteForm = () => {
 
     const fetchUnidadesMedida = async () => {
       try {
-        const response = await fetch('https://pedidosbak-production.up.railway.app/producto/listarum/');
+        const response = await fetch('http://pedidosbak-production.up.railway.app/producto/listarum/');
         if (response.ok) {
           const data = await response.json();
           setUnidadesMedida(data.unidades_medida);
@@ -85,6 +85,7 @@ const CrearComponenteForm = () => {
   }
 
   const onFinish = async (values) => {
+<<<<<<< HEAD
     try {
       const formDataObject = new FormData();
       if (values.tipo == 'F') {
@@ -100,6 +101,16 @@ const CrearComponenteForm = () => {
       formDataObject.append('id_um', values.id_um);
       formDataObject.append('id_categoria', values.id_categoria);
       const response = await fetch('https://pedidosbak-production.up.railway.app/producto/crearcomponente/', {
+=======
+    setLoading(true);
+
+    if (values.costo === undefined || values.costo === null || values.costo === '') {
+      values.costo = 0.00;
+    }
+
+    try {
+      const response = await fetch('http://pedidosbak-production.up.railway.app/producto/crearcomponente/', {
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
         method: 'POST',
         body: formDataObject,
       });
@@ -121,9 +132,14 @@ const CrearComponenteForm = () => {
   return (
     <Form
       onFinish={onFinish}
+<<<<<<< HEAD
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       form={form}
+=======
+      labelCol={{ span: 2.5 }}
+      wrapperCol={{ span: 16 }}
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
     >
       <Item
         label="Nombre"

@@ -18,8 +18,13 @@ const CrearUnidadMedida = () => {
       }); 
 
       if (response.ok) {
+<<<<<<< HEAD
         form.resetFields(); // Reset the form fields
         openNotificationWithIcon('success', 'Unidad de medida creada con éxito');
+=======
+        message.success('Unidad de medida creada con éxito');
+        form.resetFields();
+>>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
       } else {
         const errorData = await response.json();
         console.error('Error al crear la unidad de medida:', errorData);

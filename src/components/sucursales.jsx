@@ -66,7 +66,7 @@ const Sucursales = () => {
                 setLoading(false);
                 setPagination({
                     ...pagination,
-                    total: data.total, // Total de filas sin paginación
+                    total: data.total,
                 });
             })
             .catch((error) => {
