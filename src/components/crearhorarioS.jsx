@@ -134,16 +134,9 @@ const CrearHorariosSemanales = ({ onHorarioCreate, detalles }) => {
                 }
             }
         });
-<<<<<<< HEAD
         console.log('JSON de Horario:', formattedData);
         onHorarioCreate({ Detalles: formattedData });
-=======
 
-        console.log('JSON de Horario:', formattedData);
-
-        onHorarioCreate({ Detalles: formattedData });
-
->>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
         message.success('Horario creado exitosamente');
     };
 
