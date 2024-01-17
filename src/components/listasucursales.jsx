@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Modal, message, Switch, Form, Input } from 'antd';
 import mapa from './res/mapa.png';
 import AdminSucursal from './adminsucursal';
-import Crearsucursal from './crearsucursal';
+import CrearSucursal from './CrearSucursal';
 
 const ListSucursales = () => {
     const [loading, setLoading] = useState(true);
@@ -35,7 +35,7 @@ const ListSucursales = () => {
         fetchData();
         message.success('Actualizando...');
     };
-
+ 
     const handleSwitchChange = (checked, record) => {
         const formData = new FormData();
         formData.append('id_sucursal', record.id_sucursal);
@@ -190,7 +190,7 @@ const ListSucursales = () => {
                 onCancel={handleCancel}
                 footer={null}
             >
-                <Crearsucursal />
+                <CrearSucursal />
             </Modal>
         </div>
     );

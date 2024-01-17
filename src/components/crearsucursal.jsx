@@ -1,8 +1,8 @@
 import React from 'react';
-import { Form, Input, Select, Button, Upload, message } from 'antd';
+import { Form, Input, Select, Button, Upload, message, notification } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import Map from './Map'
+import Map from './Map';
 
 const { Option } = Select;
 
@@ -12,7 +12,7 @@ const Crearsucursal = () => {
     const onFinish = async (values) => {
         try {
             const formData = new FormData();
-
+ 
             formData.append('razonsocial', values.razonsocial);
             formData.append('sruc', values.ruc);
             formData.append('capacidad', values.capacidad);
@@ -28,14 +28,23 @@ const Crearsucursal = () => {
             });
 
             if (respuesta.ok) {
-                message.success('Sucursal creada exitosamente');
+                notification.success({
+                    message: 'Éxito',
+                    description: 'Sucursal creada exitosamente',
+                });
                 form.resetFields();
             } else {
-                message.error('Error al crear la sucursal');
+                notification.error({
+                    message: 'Error',
+                    description: 'Error al crear la sucursal',
+                });
                 console.log('Llegamos a este fallo', await respuesta.text());
             }
         } catch (error) {
-            message.error('Error al crear la sucursal:', error);
+            notification.error({
+                message: 'Error',
+                description: 'Error al crear la sucursal: ' + error,
+            });
         }
     };
 
@@ -48,7 +57,6 @@ const Crearsucursal = () => {
 
     return (
         <div>
-            <h2>Crear Sucursal</h2>
             <Form
                 name="crearsucursal"
                 form={form}

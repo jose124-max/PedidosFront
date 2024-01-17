@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, message, Select } from 'antd';
-
+import { Form, Input, Button, Select, notification } from 'antd';
 const { Option } = Select;
 
 const CrearBodegaForm = () => {
@@ -22,10 +21,16 @@ const CrearBodegaForm = () => {
     fetchSucursales();
   }, []);
 
+  const openNotification = (type, message) => {
+    notification[type]({
+      message,
+    });
+  };
+
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      const response = await fetch('https://pedidosbak-production.up.railway.app/bodega/crearBodega/', {
+      const response = await fetch('https://pedidosbak-production.up.railway.app/bodega/crear/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,13 +41,13 @@ const CrearBodegaForm = () => {
       const data = await response.json();
 
       if (response.ok) {
-        message.success(data.mensaje);
+        openNotification('success', data.mensaje);
       } else {
-        message.error(data.error || 'Error al crear la bodega');
+        openNotification('error', data.error || 'Error al crear la bodega');
       }
     } catch (error) {
       console.error('Error:', error);
-      message.error('Error al realizar la solicitud');
+      openNotification('error', 'Error al realizar la solicitud');
     } finally {
       setLoading(false);
     }

@@ -35,13 +35,6 @@ import EditarUnidadesMedida from './editarunidadmedida';
 import EditarMesa from './editarmesa';
 import HorariosSemanales from './horariossemanal';
 import CrearHorariosSemanales from './crearhorarioS'
-import EditarCliente from './editarcliente';
-import CrearComponenteForm from './CrearComponente';
-import EditarComponenteForm from './EditarComponente';
-import CrearBodegaForm from './CrearBodega';
-import EditarBodegaForm from './EditarBodega';
-import CrearCategoriaCombos from './crearcategoriacombos';
-import EditarCategoriaCombo from './editarcategoriacombo';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -73,7 +66,7 @@ const Admin = () => {
         if (response.ok) {
           const data = await response.json();
           const rol = data.rol;
-
+ 
           // Puedes realizar acciones con el rol recibido si es necesario
 
           // Ejemplo de redirección basada en el rol
@@ -103,7 +96,6 @@ const Admin = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      
       <Sider
         collapsible
         collapsed={collapsed}
@@ -152,19 +144,13 @@ const Admin = () => {
                 Editar Unidad de medida
               </Menu.Item>
             </SubMenu>
-            <SubMenu key="11" title="Componentes">
-              <Menu.Item key="11.1" icon={<AppstoreAddOutlined />} onClick={() => handleSubMenuClick('11.1')}>
-                Crear Componente
-              </Menu.Item>
-              <Menu.Item key="11.2" icon={<EditOutlined />} onClick={() => handleSubMenuClick('11.2')}>
-                Editar Componente
-              </Menu.Item>
-            </SubMenu>
           </SubMenu>
           <SubMenu key="sub5" icon={<FolderOpenOutlined />} title="Avisos Principales">
             <Menu.Item key="5.1" onClick={() => handleSubMenuClick('5.1')}>Crear Aviso</Menu.Item>
             <Menu.Item key="5.2" onClick={() => handleSubMenuClick('5.2')}>Editar Aviso</Menu.Item>
           </SubMenu>
+
+          {/* Nueva opción para Crear Mesa */}
           <SubMenu key="sub6" icon={<TableOutlined />} title="Mesas">
             <Menu.Item key="6.1" onClick={() => handleSubMenuClick('6.1')}>Crear Mesa</Menu.Item>
             <Menu.Item key="6.2" onClick={() => handleSubMenuClick('6.2')}>Editar Mesa</Menu.Item>
@@ -172,20 +158,10 @@ const Admin = () => {
           <SubMenu key="sub7" icon={<HddOutlined />} title="Combos">
             <Menu.Item key="7.1" onClick={() => handleSubMenuClick('7.1')}>Crear Combo</Menu.Item>
             <Menu.Item key="7.2" onClick={() => handleSubMenuClick('7.2')}>Editar Combo</Menu.Item>
-            <Menu.Item key="13.1" onClick={() => handleSubMenuClick('13.1')}>Crear Categoría Combo</Menu.Item>
-            <Menu.Item key="13.2" onClick={() => handleSubMenuClick('13.2')}>Editar Categoría Combo</Menu.Item>
           </SubMenu>
           <SubMenu key="sub8" icon={<ShopOutlined />} title="Empresa">
             <Menu.Item key="8.1" onClick={() => handleSubMenuClick('8.1')}>Ver empresa</Menu.Item>
             <Menu.Item key="8.2" onClick={() => handleSubMenuClick('8.2')}>Ver sucursales</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub10" icon={<TeamOutlined />} title="Clientes">
-            <Menu.Item key="10.1" onClick={() => handleSubMenuClick('10.1')}>Crear Cliente</Menu.Item>
-            <Menu.Item key="10.2" onClick={() => handleSubMenuClick('10.2')}>Editar Cliente</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub12" icon={<HddOutlined />} title="Bodegas">
-            <Menu.Item key="12.1" onClick={() => handleSubMenuClick('12.1')}>Crear Bodega</Menu.Item>
-            <Menu.Item key="12.2" onClick={() => handleSubMenuClick('12.2')}>Editar Bodega</Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>
@@ -206,18 +182,11 @@ const Admin = () => {
             {selectedSubMenu === '6.1' && <CrearMesa />}
             {selectedSubMenu === '6.2' && <EditarMesa />}
             {selectedSubMenu === '7.1' && <NuevoComboForm />}
-            {selectedSubMenu === '7.2' && <EditarCombo />}
+            {selectedSubMenu === '7.2' && <CrearHorariosSemanales />}
             {selectedSubMenu === '8.1' && <Empresa />}
             {selectedSubMenu === '8.2' && <ListSucursales />}
             {selectedSubMenu === '9.1' && <CrearUnidadMedida />}
             {selectedSubMenu === '9.2' && <EditarUnidadesMedida />}
-            {selectedSubMenu === '10.2' && <EditarCliente />}
-            {selectedSubMenu === '11.1' && <CrearComponenteForm />}
-            {selectedSubMenu === '11.2' && <EditarComponenteForm />}
-            {selectedSubMenu === '12.1' && <CrearBodegaForm />}
-            {selectedSubMenu === '12.2' && <EditarBodegaForm />}
-            {selectedSubMenu === '13.1' && <CrearCategoriaCombos/>}
-            {selectedSubMenu === '13.2' && <EditarCategoriaCombo/>}
           </div>
         </Content>
       </Layout>

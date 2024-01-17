@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Table, Select, Switch, message, Modal, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Table, Select, Switch,message , notification, Modal, Upload, Card, Tooltip, Watermark, Badge, Tag, Divider, Drawer, Segmented, Avatar } from 'antd';
+import { Row, Col } from 'react-bootstrap';
+import { UploadOutlined, EditFilled, UserOutlined } from '@ant-design/icons';
 import MapaActual from './mapaactual';
-import EditarEmpleado from './EditarEmpleado';
 import CrearHorariosSemanales from './crearhorarioS';
 import TextArea from 'antd/es/input/TextArea';
+import Mapafijo from './mapafijo';
+import repartidor from './res/repartidor.png'
+import administrador from './res/administrador.png'
+import camarero from './res/camarero.png';
+import cocinero from './res/cocinero.png';
+import anadir from './res/anadir.png'
+import EditarEmpleado from './EditarEmpleado';
+import CrearEmpleadoForm from './crearempleado';
 
 const { Option } = Select;
 
@@ -18,6 +26,46 @@ const AdminSucursal = ({ idsucursalx }) => {
     const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
     const [mostrarComponenteB, setMostrarComponenteB] = useState(false);
     const [horarioDetails, setHorarioDetails] = useState([]);
+    const [horario, sethorario] = useState('mostrar');
+    const [idhorario, sethorarioid] = useState(null);
+    const [openu, setOpenu] = useState(false);
+    const [selectedOficio, setSelectedOficio] = useState('Administradores');
+    const [opene, setOpene] = useState(false);
+
+    const showDrawere = () => {
+        setOpene(true);
+    };
+
+    const onClosee = () => {
+        setSelectedOficio('Administradores');
+        setOpene(false);
+    };
+
+    const handleOficioChange = (value) => {
+        if (value == 'agregar') {
+            showDrawere();
+            return;
+        }
+        setSelectedOficio(value);
+    };
+
+    const showDraweru = () => {
+        setOpenu(true);
+    };
+
+    const onCloseu = () => {
+        setOpenu(false);
+    };
+
+
+    const editarSucursal = () => {
+        if (horario == 'mostrar') {
+            sethorario('editar')
+        } else {
+            sethorario('mostrar')
+        }
+
+    }
 
     const handleHorarioClick = () => {
         if (mostrarComponenteB) {
@@ -26,39 +74,80 @@ const AdminSucursal = ({ idsucursalx }) => {
         } else { setMostrarComponenteB(true); setvalor('Cancelar'); }
 
     };
+
+    const editHorarioCreate = async (jsonHorario) => {
+        try {
+            const formDataObject = new FormData();
+            formDataObject.append('detalle', JSON.stringify(jsonHorario));
+
+            const response = await fetch('https://pedidosbak-production.up.railway.app/horarios/edit/' + idhorario, {
+                method: 'POST',
+                body: formDataObject,
+            });
+
+            const responseData = await response.json();
+
+            if (responseData.mensaje) {
+                notification.success({
+                    message: 'Éxito',
+                    description: 'Horario editado exitosamente',
+                });
+                fetchData();
+                handleHorarioClick();
+                sethorario('mostrar');
+            } else {
+                notification.error({
+                    message: 'Error',
+                    description: 'Error al editar el horario: ' + responseData.error,
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Error',
+                description: 'Error al validar el formulario',
+            });
+        }
+    };
+
+
     const handleHorarioCreate = async (jsonHorario) => {
         try {
             const formData = await form.validateFields();
             const { nombreh, hordescripcion } = formData;
-    
+
             const formDataObject = new FormData();
-            console.log(JSON.stringify(jsonHorario));
-            console.log(nombreh);
-            formDataObject.append('nombreh', nombreh);
-            formDataObject.append('hordescripcion', hordescripcion);
-    
+            formDataObject.append('nombreh', 'horarioSucursal' + idsucursalx);
             formDataObject.append('detalle', JSON.stringify(jsonHorario));
             formDataObject.append('idsucursal', idsucursalx);
-    
+
             const response = await fetch('https://pedidosbak-production.up.railway.app/horarios/CrearHorarioSucursal/', {
                 method: 'POST',
                 body: formDataObject,
             });
-    
+
             const responseData = await response.json();
-    
+
             if (responseData.mensaje) {
-                message.success(responseData.mensaje);
+                notification.success({
+                    message: 'Éxito',
+                    description: 'Horario creado exitosamente',
+                });
                 fetchData();
                 handleHorarioClick();
-
             } else {
-                message.error('Error al crear el horario');
+                notification.error({
+                    message: 'Error',
+                    description: 'Error al crear el horario: ' + responseData.error,
+                });
             }
         } catch (error) {
-            message.error('Error al validar el formulario');
+            notification.error({
+                message: 'Error',
+                description: 'Error al validar el formulario',
+            });
         }
     };
+
 
     useEffect(() => {
 
@@ -68,20 +157,21 @@ const AdminSucursal = ({ idsucursalx }) => {
     const fetchHorarioDetails = async (idHorario) => {
         try {
             console.log(idHorario);
-            const response = await fetch('https://pedidosbak-production.up.railway.app/horarios/get/'+idHorario);
+            const response = await fetch('https://pedidosbak-production.up.railway.app/horarios/get/' + idHorario);
             const data = await response.json();
 
             if (data.detalles) {
-                console.log(data.detalles);
+                console.log('Detalles' + data.detalles[0].dia);
                 setHorarioDetails(data.detalles);
-            } else {
-                console.error('No se encontraron detalles del horario');
             }
         } catch (error) {
-            console.error('Error al obtener los detalles del horario:', error);
-            message.error('Error al obtener los detalles del horario');
+            notification.warning({
+                message: 'No hay horario',
+                description: 'No haz creado un horario de atención para tu sucursal',
+            });
         }
     };
+
 
     const fetchData = async () => {
         try {
@@ -103,6 +193,8 @@ const AdminSucursal = ({ idsucursalx }) => {
                 setLoading(false);
             }
             fetchHorarioDetails(data.mensaje[0].id_horarios);
+            sethorarioid(data.mensaje[0].id_horarios);
+
             setFileList([
                 {
                     uid: '-1',
@@ -156,31 +248,40 @@ const AdminSucursal = ({ idsucursalx }) => {
             formData.append('snombre', values.snombre);
 
             if (values.imagensucursal.fileList) {
-
                 formData.append('imagensucursal', fileList[0].originFileObj);
             } else {
                 console.error('Tipo de archivo no válido');
-                // Puedes mostrar un mensaje de error o tomar otras acciones apropiadas.
             }
+
             const response = await fetch('https://pedidosbak-production.up.railway.app/sucursal/EditarSucursal/' + idsucursalx, {
                 method: 'POST',
                 body: formData,
             });
 
             const data = await response.json();
-            message.success(data.mensaje);
+
+            notification.success({
+                message: 'Éxito',
+                description: data.mensaje,
+            });
+
             fetchData();
         } catch (error) {
             console.error('Error al guardar los datos:', error);
+            notification.error({
+                message: 'Error',
+                description: 'Error al guardar los datos: ' + error.message,
+            });
         }
     };
 
-    const handleSaveUbicacion = (latitud, longitud) => {
+    const handleSaveUbicacion = async (latitud, longitud) => {
         Modal.confirm({
             title: 'Confirmar',
             content: '¿Estás seguro de que deseas actualizar la ubicación de esta sucursal?',
             onOk() {
                 const formData = new FormData();
+
                 formData.append('id_sucursal', idsucursalx);
                 formData.append('latitud', latitud);
                 formData.append('longitud', longitud);
@@ -189,24 +290,33 @@ const AdminSucursal = ({ idsucursalx }) => {
                     method: 'POST',
                     body: formData,
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        fetchData();
-                        message.success('Ubicación actualizada con éxito');
-                        console.log('Respuesta de la API:', data);
-                        fetchData();
+                    .then(response => {
+                        if (response.ok) {
+                            notification.success({
+                                message: 'Éxito',
+                                description: 'Ubicación actualizada correctamente',
+                            });
+                            fetchData();
+                        } else {
+                            throw new Error('Error al editar la ubicación de la sucursal');
+                        }
                     })
                     .catch(error => {
-                        console.error('Error al enviar la solicitud POST:', error);
-                        message.error('Error al actualizar la ubicación')
+                        notification.error({
+                            message: 'Error',
+                            description: 'Error al editar la ubicación de la sucursal: ' + error.message,
+                        });
+                        console.error('Error al editar la ubicación de la sucursal', error);
                     });
             },
             onCancel() {
-                message.success('Actualización de ubicación cancelada');
+                notification.success({
+                    message: 'Éxito',
+                    description: 'Actualización de ubicación cancelada',
+                });
             },
         });
     };
-
     const onFinish = (values) => {
         console.log('Valores del formulario:', values);
     };
@@ -300,7 +410,15 @@ const AdminSucursal = ({ idsucursalx }) => {
                         listType="picture-card"
                         fileList={fileList}
                         onChange={handleChange}
-                        beforeUpload={() => false}
+                        beforeUpload={(file) => {
+                            const isImage = /\.(png|jpg|jpeg)$/i.test(file.name);
+                            if (isImage) {
+
+                                return false;
+                            }
+                            return true;
+                        }}
+                        accept=".png, .jpg, .jpeg"
                     >
                         {fileList.length >= 1 ? null : uploadButton}
                     </Upload>
@@ -318,9 +436,9 @@ const AdminSucursal = ({ idsucursalx }) => {
     );
 
     const columns = [
-        { title: 'Datos', dataIndex: 'Datos', key: 'Datos' },
+        { dataIndex: 'Datos', key: 'Datos' },
         {
-            title: 'Valor',
+
             dataIndex: 'Valor',
             key: 'Valor',
             render: (text) => <span>{text}</span>,
@@ -329,141 +447,310 @@ const AdminSucursal = ({ idsucursalx }) => {
 
     return (
         <>
+            <Divider>{sucursalData && (sucursalData.snombre)}</Divider>
+            <Row>
+                <Col md={4}>
+                    <Col xs={24} sm={12} md={12} lg={12}>
+                        {sucursalData && (
+                            <Card
+                                hoverable
+                                title={sucursalData.snombre}
+                                style={{
+                                    width: '100%', backgroundColor: '#CAF0EF', border: '1px solid #A4A4A4', marginTop: '5%',
+                                    height: '100%',
+                                    marginLeft: '1px',
+                                }}
+                                cover={
+                                    sucursalData.id_ubicacion.longitud ? (
+                                        <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                                            <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                                                <>
+                                                    <Mapafijo
+                                                        latitud={sucursalData.id_ubicacion.latitud}
+                                                        longitud={sucursalData.id_ubicacion.longitud}
+                                                        idm={sucursalData.id_sucursal}
+                                                    />
+                                                    <Row align="right">
+                                                        <Col md={12}>
+                                                            <Tooltip title='Editar o agregar ubicación'>
+                                                                <Button
+                                                                    type="primary"
+                                                                    icon={<EditFilled />}
+                                                                    onClick={showDraweru}
+                                                                >
+                                                                </Button>
+                                                            </Tooltip>
+                                                        </Col>
+                                                    </Row>
+                                                </>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <Watermark content={[sucursalData.snombre, 'Sin ubicación']}>
+                                                <div style={{ width: '100%', height: '200px', overflow: 'hidden', backgroundColor: '#ffff', borderLeft: '1px solid  #A4A4A4', borderRight: ' 1px solid  #A4A4A4' }} />
+                                            </Watermark>
+                                            <Row align="right">
+                                                <Col md={12}>
+                                                    <Tooltip title='Editar o agregar ubicación'>
+                                                        <Button
+                                                            type="primary"
+                                                            icon={<EditFilled />}
+                                                            onClick={showDraweru}
+                                                        >
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Col>
+                                            </Row>
+                                        </>
+                                    )
 
-            <h1>Datos Generales</h1>
-            <div style={{ display: 'flex', padding: '2px' }}>
-                <div style={{ flex: 1, marginRight: '20px', padding: '2px' }}>
+                                }
+                            >
+                                <strong style={{ fontWeight: 'bold', fontSize: '10.5px' }}>Dirección:</strong> {sucursalData.sdireccion}
+                                <Row align="right">
+                                    <strong style={{ fontWeight: 'bold', fontSize: '10.5px' }}>Estado:</strong>
+                                    <Col md={12}>
+                                        <Tooltip title={sucursalData.sestado === '1' ? 'Desactivar Sucursal' : 'Activar Sucursal'}>
+                                            <Switch
+                                                defaultChecked={sucursalData.sestado === '1'}
+                                                checked={sucursalData.sestado === '1'}
+                                                onChange={(checked) => handleSwitchChange(checked, sucursalData.id_sucursal)}
+                                            />
+                                        </Tooltip>
+                                    </Col>
+                                </Row>
+                                <Row align="left">
+                                    <br />
+                                    <Col md={12}>
+                                        <strong style={{ fontWeight: 'bold', fontSize: '10.5px' }}>Empleados: </strong>
+                                        <Badge count={sucursalData.cantidadempleados} showZero color='#06CE15' />
+                                    </Col>
+                                </Row>
 
-                    <Form form={form} name="adminSucursalForm" onFinish={onFinish} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
-                        <Table columns={columns} dataSource={renderFormItems()} pagination={false} size="middle" bordered />
-
-                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                            <Button type="primary" htmlType="submit" onClick={handleGuardarClick}>
-                                Guardar
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </div>
-                <div style={{ flex: 1, marginRight: '20px', padding: '2px' }}>
-                    <div style={{ flex: 1, marginRight: '20px', padding: '2px' }}>
-                        <Table
-                            columns={[
-                                { title: 'Estado', dataIndex: 'Estado', key: 'Estado' },
-                            ]}
-                            dataSource={[
-                                {
-                                    title: 'Estado',
-                                    dataIndex: 'Estado',
-                                    key: 'Estado',
-                                    Estado:
-                                        <Switch
-                                            defaultChecked={sucursalData && sucursalData.sestado === '1'}
-                                            checked={sucursalData && sucursalData.sestado === '1'}
-                                            onChange={(checked) => handleSwitchChange(checked)}
-                                        />
-                                },
-                            ]}
-                            pagination={false}
-                            size="middle"
-                            bordered
-                        />
-                    </div>
-                    <div style={{ flex: 1, marginRight: '20px', padding: '2px' }}>
-
-                    </div>
-                    <div >
-                        <Table
-                            columns={[
-                                { title: 'Ubicacion', dataIndex: 'Ubicacion', key: 'Ubicacion' },
-                            ]}
-                            dataSource={[
-                                {
-                                    title: 'Ubicacion',
-                                    dataIndex: 'Ubicacion',
-                                    key: 'Ubicacion',
-                                    Ubicacion: sucursalData ? (
+                            </Card>
+                        )}
+                    </Col>
+                </Col>
+                <Drawer
+                    title="Editar ubicación de la sucursal"
+                    width={720}
+                    onClose={onCloseu}
+                    open={openu}
+                    styles={{
+                        body: {
+                            paddingBottom: 80,
+                        },
+                    }}
+                >
+                    <Table
+                        columns={[
+                            { title: 'Ubicacion', dataIndex: 'Ubicacion', key: 'Ubicacion' },
+                        ]}
+                        dataSource={[
+                            {
+                                title: 'Ubicacion',
+                                dataIndex: 'Ubicacion',
+                                key: 'Ubicacion',
+                                Ubicacion: sucursalData ? (
+                                    <MapaActual
+                                        latitud={sucursalData.id_ubicacion.latitud}
+                                        longitud={sucursalData.id_ubicacion.longitud}
+                                        onSaveCoordinates={handleSaveUbicacion}
+                                    />
+                                ) : (
+                                    <div>
                                         <MapaActual
-                                            latitud={sucursalData.id_ubicacion.latitud}
-                                            longitud={sucursalData.id_ubicacion.longitud}
                                             onSaveCoordinates={handleSaveUbicacion}
                                         />
-                                    ) : (
-                                        <div>
-                                            <MapaActual
-                                                onSaveCoordinates={handleSaveUbicacion}
-                                            />
-                                            <p>No hay ubicación agregada. Selecciona tu ubicación.</p>
-                                        </div>
+                                        <p>No hay ubicación agregada. Selecciona tu ubicación.</p>
+                                    </div>
+                                ),
+                            },
+                        ]}
+                        pagination={false}
+                        size="middle"
+                        bordered
+                    />
+                </Drawer>
+                <Col md={8}>
+                    <div style={{ flex: 1, marginRight: '20px', padding: '2px' }}>
+                        <Form form={form} name="adminSucursalForm" onFinish={onFinish} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+                            <Table columns={columns} dataSource={renderFormItems()} pagination={false} size="middle" bordered />
+
+                            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                                <Button type="primary" htmlType="submit" onClick={handleGuardarClick}>
+                                    Guardar
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </div>
+                </Col>
+            </Row>
+            <Row>
+                <Col md={12}>
+                    <Card
+                        hoverable
+                        title={'Horario de atención'}
+                        style={{
+                            width: '100%', border: '1px solid #A4A4A4', marginTop: '5%',
+                            margin: '16px',
+                            marginLeft: '1px',
+                        }}
+                        cover={
+                            <div >
+                                {horarioDetails.length > 0 && horario === 'mostrar' && (
+                                    <div className="table-responsive">
+                                        <table className="table table-bordered" style={{ border: '1px solid #A4A4A4', marginTop: '5%' }}>
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Domingo</th>
+                                                    <th scope="col">Lunes</th>
+                                                    <th scope="col">Martes</th>
+                                                    <th scope="col">Miércoles</th>
+                                                    <th scope="col">Jueves</th>
+                                                    <th scope="col">Viernes</th>
+                                                    <th scope="col">Sábado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    {["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"].map((dia, index) => (
+                                                        <td key={index} className="text-left">
+                                                            {horarioDetails.map((detalle) => {
+                                                                if (detalle.dia === dia) {
+                                                                    return (
+                                                                        <>
+                                                                            <Tag color={detalle.hora_inicio ? '#52c41a' : '#f5222d'}>
+                                                                                {detalle.hora_inicio ? 'Abrir' : 'Cerrar'}
+                                                                            </Tag>
+                                                                            <br />
+                                                                            <Tooltip title='Hora de apertura'>
+                                                                                <label>{detalle.hora_inicio || "00:00"}</label>
+                                                                            </Tooltip>
+                                                                            <br />
+                                                                            <Tag color={detalle.hora_fin ? '#f5222d' : '#52c41a'}>
+                                                                                {detalle.hora_fin ? 'Cerrar' : 'Abrir'}
+                                                                            </Tag>
+                                                                            <br />
+                                                                            <Tooltip title='Hora de cierre'>
+                                                                                <label>{detalle.hora_fin || "00:00"}</label>
+                                                                            </Tooltip>
+                                                                            <br />
+                                                                        </>
+
+                                                                    );
+                                                                }
+                                                                return null;
+                                                            })}
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>)}
+                                {horarioDetails.length == 0 && (
+                                    <>
+
+                                        <CrearHorariosSemanales onHorarioCreate={handleHorarioCreate} />
+                                    </>
+                                )}
+                                {horarioDetails.length > 0 && horario === 'editar' && (
+                                    <>
+
+                                        <CrearHorariosSemanales detalles={horarioDetails} onHorarioCreate={editHorarioCreate} />
+                                    </>
+                                )}
+                            </div>
+                        }
+                    >
+                        <Row align="right">
+                            <Col md={12}>
+                                <Button
+                                    type="primary"
+                                    icon={<EditFilled />}
+                                    onClick={(editarSucursal)}
+                                >
+                                </Button></Col>
+                        </Row>
+
+                    </Card>
+
+                </Col>
+                <Row>
+                    <Col md={12}>
+                        <Segmented
+                            options={[
+                                {
+                                    label: (
+                                        <Tooltip title="Administradores">
+                                            <div style={{ padding: 4 }}>
+                                                <Avatar style={{ backgroundColor: '#87d068' }} src={administrador} size="large" />
+                                            </div>
+                                        </Tooltip>
                                     ),
+                                    value: 'Administradores',
+                                },
+                                {
+                                    label: (
+                                        <Tooltip title="Motorizados">
+                                            <div style={{ padding: 4 }}>
+                                                <Avatar style={{ backgroundColor: '#87d068' }} size="large" src={repartidor} />
+                                            </div>
+                                        </Tooltip>
+                                    ),
+                                    value: 'Motorizados',
+                                },
+                                {
+                                    label: (
+                                        <Tooltip title="Meseros">
+                                            <div style={{ padding: 4 }}>
+                                                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} size="large" src={camarero} />
+                                            </div>
+                                        </Tooltip>
+                                    ),
+                                    value: 'Meseros',
+                                },
+                                {
+                                    label: (
+                                        <Tooltip title="Jefes de cocina">
+                                            <div style={{ padding: 4 }}>
+                                                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} size="large" src={cocinero} />                                        </div>
+                                        </Tooltip>
+                                    ),
+                                    value: 'JefesCocina',
+                                },
+                                {
+                                    label: (
+                                        <Tooltip title="Agregar empleados">
+                                            <div style={{ padding: 4 }}>
+                                                <Avatar style={{ backgroundColor: '#ffff' }} icon={<UserOutlined />} size="large" src={anadir} />                                        </div>
+                                        </Tooltip>
+                                    ),
+                                    value: 'agregar',
                                 },
                             ]}
-                            pagination={false}
-                            size="middle"
-                            bordered
+                            value={selectedOficio}
+                            onChange={handleOficioChange}
                         />
-                    </div>
+                    </Col>
+                </Row>
+                <EditarEmpleado idsucur={idsucursalx} oficio={selectedOficio}></EditarEmpleado>
+            </Row>
+            <Drawer
+                title="Crear empleado"
+                width={720}
+                onClose={onClosee}
+                open={opene}
+                styles={{
+                    body: {
+                        paddingBottom: 80,
+                    },
+                }}
+            >
+                <CrearEmpleadoForm></CrearEmpleadoForm>
+            </Drawer>
 
-                </div>
-
-            </div>
-            <div>
-                <Table
-                    columns={[
-                        { title: 'Empleados', dataIndex: 'Empleados', key: 'Empleados' },
-                    ]}
-                    dataSource={[
-                        {
-                            title: 'Empleados',
-                            dataIndex: 'Empleados',
-                            key: 'Empleados',
-                            Empleados: idsucursalx ? (
-                                <EditarEmpleado idsucur={idsucursalx} />
-                            ) : (
-                                <div>
-                                    <EditarEmpleado idsucur={idsucursalx} />
-                                </div>
-                            ),
-                        },
-                    ]}
-                    pagination={false}
-                    size="middle"
-                    bordered
-                />
-            </div>
-            <div>
-                <h1>Horarios</h1>
-                <Table
-                columns={[
-                    { title: 'Día', dataIndex: 'dia', key: 'dia' },
-                    { title: 'Hora Inicio', dataIndex: 'hora_inicio', key: 'hora_inicio' },
-                    { title: 'Hora Fin', dataIndex: 'hora_fin', key: 'hora_fin' },
-                ]}
-                dataSource={horarioDetails}
-                pagination={false}
-                size="middle"
-                bordered
-            />
-                <Button onClick={handleHorarioClick}>{valorb}</Button>
-                {mostrarComponenteB && <div>
-                    <Form form={form}  layout="vertical">
-                        <Form.Item
-                            label="Nombre del horario"
-                            name="nombreh"
-                            rules={[{ required: true, message: 'Agrega un nombre al horario' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            label="Descripcion del horario"
-                            name="hordescripcion"
-                        >
-                            <TextArea />
-                        </Form.Item>
-                    </Form>
-                    <CrearHorariosSemanales onHorarioCreate={handleHorarioCreate}/>
-                </div>}
-
-            </div>
         </>
     );
 };

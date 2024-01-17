@@ -17,7 +17,7 @@ const CrearAvisos = () => {
     formData.append('titulo', titulo);
     formData.append('descripcion', descripcion);
     formData.append('imagen', imagen.file);
-
+ 
     try {
       const response = await fetch('https://pedidosbak-production.up.railway.app/avisos/crear/', {
         method: 'POST',

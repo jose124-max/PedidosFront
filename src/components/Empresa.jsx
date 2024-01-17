@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Spin, Space, Typography, Button, Modal, Form, Input, message, Image, Upload } from 'antd';
-import { LoadingOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons';
+import { Card, Space, Typography, Button, Modal, Form, Input, message, Image, Upload,Divider,Drawer } from 'antd';
+import { EditTwoTone, EditOutlined, UploadOutlined } from '@ant-design/icons';
+import { Row, Col, Table } from 'react-bootstrap';
 import Sucursales from './sucursales';
 
 
@@ -9,8 +10,29 @@ const { Title } = Typography;
 const Empresa = () => {
   const [empresaInfo, setEmpresaInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [editModalVisible, setEditModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [opene, setOpene] = useState(false);
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Falló la validación:', errorInfo);
+  };
+
+  const showDrawere = () => {
+    setOpene(true);
+    form.setFieldsValue({
+      enombre: empresaInfo.enombre,
+      direccion: empresaInfo.direccion,
+      etelefono: empresaInfo.etelefono,
+      correoelectronico: empresaInfo.correoelectronico,
+      fechafundacion: empresaInfo.fechafundacion,
+      sitioweb: empresaInfo.sitioweb,
+      eslogan: empresaInfo.eslogan,
+    });
+  };
+
+  const onClosee = () => {
+    setOpene(false);
+  };
 
   const obtenerInformacionEmpresa = async () => {
     try {
@@ -35,18 +57,7 @@ const Empresa = () => {
     obtenerInformacionEmpresa();
   }, []);
 
-  const mostrarModalEditar = () => {
-    setEditModalVisible(true);
-    form.setFieldsValue({
-      enombre: empresaInfo.enombre,
-      direccion: empresaInfo.direccion,
-      etelefono: empresaInfo.etelefono,
-      correoelectronico: empresaInfo.correoelectronico,
-      fechafundacion: empresaInfo.fechafundacion,
-      sitioweb: empresaInfo.sitioweb,
-      eslogan: empresaInfo.eslogan,
-    });
-  };
+
 
   const manejarEdicion = async (values) => {
     const formData = new FormData();
@@ -78,7 +89,6 @@ const Empresa = () => {
       formData.append('eslogan', values.eslogan);
     }
 
-    // Agregar el campo 'logo' solo si se selecciona un archivo
     if (values.logo && values.logo.length > 0) {
       formData.append('elogo', values.logo[0].originFileObj);
     }
@@ -88,15 +98,14 @@ const Empresa = () => {
         method: 'POST',
         body: formData,
       });
-
+  
       if (respuesta.ok) {
-        message.success('Datos de la empresa actualizados correctamente');
-        setEditModalVisible(false);
-        // Obtener información actualizada después de la edición
+        message.success('Datos de la empresa actualizados correctamente'); // Mensaje de éxito
+        onClosee(false);
         obtenerInformacionEmpresa();
+        window.location.href = '/home';
       } else {
         message.error('Error al editar la información de la empresa');
-        // Puedes manejar la respuesta de otra manera si es necesario
         console.log(await respuesta.text());
       }
     } catch (error) {
@@ -104,9 +113,6 @@ const Empresa = () => {
     }
   };
 
-  const manejarCancelacion = () => {
-    setEditModalVisible(false);
-  };
 
   const columns = [
     {
@@ -141,80 +147,119 @@ const Empresa = () => {
     : [];
 
   return (
-    <Space size="middle" style={{ width: '100%', textAlign: 'center', padding: '20px' }}>
-      {loading ? (
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-      ) : (
-        <div>
+    <>
+      <Row>
+        <Col md={12}>
           <Title level={4} style={{ marginBottom: '20px' }}>
             Información de la Empresa
           </Title>
-
-          <Table columns={columns} dataSource={dataSource} bordered pagination={false} />
-          <p />
-          <Button type="primary" icon={<EditOutlined />} onClick={mostrarModalEditar}>
-            Editar Información
-          </Button>
-          <Modal
-            title="Editar Información de la Empresa"
-            visible={editModalVisible}
-            onCancel={manejarCancelacion}
-            footer={null}
+          <Card
+            hoverable
+            className="text-center"
+            style={{backgroundColor: '#CDEECC',border: '1px solid #A4A4A4',cursor: 'default'}}
           >
-            <Form form={form} onFinish={manejarEdicion}>
-              <Form.Item label="Nombre" name="enombre" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item label="Dirección" name="direccion">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Teléfono" name="etelefono"
-                rules={[{
-                  pattern: /^[0-9]+$/,
-                  message: 'Por favor, ingresa solo números en el teléfono',
-                }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item label="Correo Electrónico" name="correoelectronico" type="email"
-                rules={[{ type: 'email', message: 'Por favor, ingresa un correo electrónico válido' },]}>
-                <Input />
-              </Form.Item>
-              <Form.Item label="Fecha de Fundación" name="fechafundacion" type="date">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Sitio Web" name="sitioweb">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Eslogan" name="eslogan">
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="logo"
-                valuePropName="fileList"
-                getValueFromEvent={(e) => e && e.fileList}
-                noStyle
-              >
-                <Upload
-                  listType="picture"
-                  beforeUpload={() => false}
-                  maxCount={1}
-                  accept=".png, .jpg, .jpeg"
-                >
-                  <Button icon={<UploadOutlined />}>Subir Imagen</Button>
-                </Upload>
-              </Form.Item>
-              <Button type="primary" htmlType="submit">
-                Guardar Cambios
-              </Button>
-            </Form>
-          </Modal>
-        </div>
-      )}
-      <Space size="large" style={{ width: '100%', textAlign: 'center', padding: '20px' }}>
-          <Sucursales/>
-      </Space>
-    </Space>
+            <div className="table-responsive">
+              <table className="table table-bordered" headers="false" style={{border: '1px solid #A4A4A4'}}>
 
+                <tbody>
+                  {dataSource.map(record => (
+                    <tr key={record.key}>
+                      <td className="text-left">{record.campo}</td> {/* Alinea a la izquierda */}
+                      <td className="text-left">
+                        {record.campo === 'Logo' && empresaInfo.elogo ? (
+                          <Image src={`data:image/png;base64,${record.valor}`} width={50} />
+                        ) : (
+                          record.valor
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button
+                type="link"
+                style={{ fontSize: '24px', marginLeft: 'auto'}}
+                icon={<EditTwoTone style={{ fontSize: '40px', color: '#eb2f96',marginLeft:'2%',border: '3px solid #268A2E'}} />}
+                onClick={showDrawere}
+              />
+            </div>
+          </Card>
+        </Col> 
+        <Divider>Sucursales</Divider>
+        <Col md={12} style={{ padding: '2%' }}>
+            <Sucursales />
+        </Col>
+      </Row>
+
+      <Drawer
+        title="Editar información de empresa"
+        width={720}
+        onClose={onClosee}
+        open={opene}
+        styles={{
+          body: {
+            paddingBottom: 80,
+          },
+        }}
+      >
+        <Form form={form} onFinish={manejarEdicion} onFinishFailed={onFinishFailed}>
+        <Form.Item label="Nombre" name="enombre" rules={[{ required: true, message: 'Por favor, ingresa el nombre' }, { max: 200, message: 'El nombre debe tener máximo 200 caracteres' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Dirección" name="direccion" rules={[{ max: 300, message: 'La dirección debe tener máximo 300 caracteres' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Teléfono"
+            name="etelefono"
+            rules={[
+              { pattern: /^[0-9]+$/, message: 'Por favor, ingresa solo números en el teléfono' },
+              { max: 10, message: 'El teléfono debe tener máximo 10 dígitos' },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Correo Electrónico"
+            name="correoelectronico"
+            type="email"
+            rules={[
+              { type: 'email', message: 'Por favor, ingresa un correo electrónico válido' },
+              { max: 256, message: 'El correo electrónico debe tener máximo 256 caracteres' },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Sitio Web" name="sitioweb" rules={[{ max: 2000, message: 'El sitio web debe tener máximo 2000 caracteres' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Eslogan" name="eslogan" rules={[{ max: 300, message: 'El eslogan debe tener máximo 300 caracteres' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="logo"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => e && e.fileList}
+            noStyle
+          >
+            <Upload
+              listType="picture"
+              beforeUpload={() => false}
+              maxCount={1}
+              accept=".png, .jpg, .jpeg"
+            >
+              <Button icon={<UploadOutlined />}>Subir Imagen</Button>
+            </Upload>
+          </Form.Item>
+          <br/>
+          <Button type="primary" htmlType="submit">
+            Guardar Cambios
+          </Button>
+        </Form>
+      </Drawer>
+    </>
   );
 };
 

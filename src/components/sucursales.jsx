@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Table, Modal, message, Switch } from 'antd';
-import Crearsucursal from './crearsucursal';
+import { UserOutlined, CloseOutlined } from '@ant-design/icons';
+import { Badge, Button, Card, Modal, message, Switch, Watermark, Tooltip, Result, Drawer } from 'antd';
+import { Row, Col } from 'react-bootstrap';
+import CrearSucursal from './CrearSucursal';
 import mapa from './res/mapa.png';
 import MapaActual from './mapaactual';
+import Mapafijo from './mapafijo';
+import AdminSucursal from './adminsucursal'
 
 const Sucursales = () => {
     const [loading, setLoading] = useState(true);
@@ -12,12 +16,26 @@ const Sucursales = () => {
     const [ubicacionAltitud, setUbicacionAltitud] = useState(null);
     const [ubicacionLongitud, setUbicacionLongitud] = useState(null);
     const [currentSucursal, setCurrentSucursal] = useState(null);
+    const [currentPage, setCurrentPage] = useState('sucursal');
+    const [opens, setOpens] = useState(false);
 
-    const handleUbicacionClick = (altitud, longitud, id_sucursal) => {
-        setUbicacionLongitud(longitud);
-        setUbicacionAltitud(altitud);
-        setCurrentSucursal(id_sucursal);
-        setUbicacionVisible(true);
+    const showDrawers = () => {
+        setOpens(true);
+    };
+
+    const onCloses = () => {
+        setOpens(false);
+        fetchData();
+    };
+
+    const handleCardClick = (page, ids) => () => {
+        setCurrentPage(page);
+        setCurrentSucursal(ids);
+    };
+
+    const handleAtrasClick = () => {
+        setCurrentPage('sucursal');
+        fetchData();
     };
 
     const handleUbicacionCancel = () => {
@@ -35,6 +53,7 @@ const Sucursales = () => {
 
     const fetchData = () => {
         setLoading(true);
+        setCurrentPage('sucursal');
         setSucursalesData([]);
 
         const { current, pageSize } = pagination;
@@ -117,114 +136,105 @@ const Sucursales = () => {
         });
     };
 
-    const columns = [
-        { title: 'ID', dataIndex: 'id_sucursal', key: 'id_sucursal' },
-        { title: 'Razón Social', dataIndex: 'srazon_social', key: 'srazon_social' },
-        { title: 'Dirección', dataIndex: 'sdireccion', key: 'sdireccion' },
-        { title: 'Nombre', dataIndex: 'snombre', key: 'snombre' },
-        {
-            title: 'Ubicación',
-            dataIndex: 'id_ubicacion',
-            key: 'id_ubicacion',
-            render: (id_ubicacion, record) => (
-                <>
-                    {id_ubicacion && (
-                        <img
-                            onClick={() => handleUbicacionClick(id_ubicacion.latitud, id_ubicacion.longitud, record.id_sucursal)}
-                            src={mapa}
-                            style={{ maxWidth: '40px', maxHeight: '40px' }}
-                        />
-                    )}
-                </>
-            ),
-        },
-        {
-            title: 'Imágenes',
-            dataIndex: 'imagensucursal',
-            key: 'imagensucursal',
-            render: (imagensucursal) =>
-                imagensucursal && (
-                    <img
-                        src={`data:image/png;base64,${imagensucursal}`}
-                        alt="Sucursal"
-                        style={{ maxWidth: '50px', maxHeight: '50px' }}
-                    />
-                ),
-        },
-        {
-            title: 'Estado',
-            dataIndex: 'sestado',
-            key: 'sestado',
-            render: (sestado, record) => (
-                <Switch
-                    defaultChecked={sestado === '1'}
-                    checked={sestado === '1'}
-                    onChange={(checked) => handleSwitchChange(checked, record)}
-                />
-            ),
-        },
-    ];
-
-    const openModal = () => {
-        setModalVisible(true);
-    };
-
-    const handleCancel = () => {
-        setModalVisible(false);
-        fetchData();
-    };
-
-    const handleTableChange = (pagination) => {
-        setPagination(pagination);
-    };
 
     return (
-        <div>
-            <h2>Sucursales</h2>
-            <Space direction="vertical" size="middle" style={{ width: '100%', textAlign: 'center', padding: '20px' }}>
-                <Button type="primary" style={{ width: '100%' }} onClick={openModal}>
-                    Crear Nueva Sucursal
-                </Button>
-            </Space>
-            <div style={{ overflowX: 'auto' }}>
-                <Table
-                    columns={columns}
-                    dataSource={sucursalesData}
-                    bordered
-                    pagination={pagination}
-                    loading={loading}
-                    onChange={handleTableChange}
-                    style={{ maxWidth: '100%' }}
-                    rowKey={(record) => record.id_sucursal}
-                />
-            </div>
-            <Modal
-                title="Ubicación"
-                visible={ubicacionVisible}
-                onCancel={handleUbicacionCancel}
-                footer={null}
-                width={1000}
+        <>
+            {currentPage === 'sucursal' && (
+                <div>
+                    <Button type="primary" style={{ width: '100%' }} onClick={showDrawers}>
+                        Crear Nueva Sucursal
+                    </Button>
+                    {sucursalesData.length ? (
+                        <Row>
+                            {sucursalesData.map(sucursal => (
+                                <Col key={sucursal.id_sucursal} xs={24} sm={12} md={3} lg={3}>
+                                    <Card
+                                        hoverable
+                                        title={sucursal.snombre}
+                                        style={{
+                                            width: '100%', backgroundColor: '#CAF0EF', border: '1px solid #A4A4A4', marginTop: '5%',
+                                            height: '92%', margin: '16px', marginLeft: '1px',
+                                        }}
+                                        cover={
+                                            sucursal.id_ubicacion.longitud ? (
+                                                <div style={{ width: '100%', height: '200px', overflow: 'hidden' }}>
+                                                    <Mapafijo
+                                                        latitud={sucursal.id_ubicacion.latitud}
+                                                        longitud={sucursal.id_ubicacion.longitud}
+                                                        idm={sucursal.id_sucursal}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <Watermark content={[sucursal.snombre, 'Sin ubicación']}>
+                                                    <div style={{ width: '100%', height: '200px', overflow: 'hidden', backgroundColor: '#ffff', borderLeft: '1px solid  #A4A4A4', borderRight: ' 1px solid  #A4A4A4' }} />
+                                                </Watermark>
+                                            )
+                                        }
+                                        onClick={handleCardClick('editar', sucursal.id_sucursal)}
+                                    >
+                                        <strong style={{ fontWeight: 'bold', fontSize: '10.5px' }}>Dirección:</strong> {sucursal.sdireccion}
+                                        <Row align="right">
+                                            <strong style={{ fontWeight: 'bold', fontSize: '10.5px' }}>Estado:</strong>
+                                            <Col md={12}>
+                                                <Tooltip title={sucursal.sestado === '1' ? 'Desactivar Sucursal' : 'Activar Sucursal'}>
+                                                    <Switch
+                                                        defaultChecked={sucursal.sestado === '1'}
+                                                        checked={sucursal.sestado === '1'}
+                                                        onChange={(checked) => handleSwitchChange(checked, sucursal)}
+                                                    />
+                                                </Tooltip>
+                                            </Col>
+                                        </Row>
+                                        <Row align="left">
+                                            <br />
+                                            <Col md={12}>
+                                                <strong style={{ fontWeight: 'bold', fontSize: '10.5px' }}>Empleados: </strong>
+                                                <Badge count={sucursal.cantidadempleados} showZero color='#06CE15' />
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
+                    ) :
+                        <Result
+                            status="404"
+                            title="Vacío"
+                            subTitle="No tienes sucursales creadas."
+ 
+                        />
+                    }
+                </div >
+            )}
+            {currentPage === 'editar' && (
+                <div style={{ position: 'relative', marginBottom: '10px', border: '1px solid #A4A4A4', borderRadius: '1%', padding: '5%', margin: '1%' }}>
+                    <Button
+                        shape="circle"
+                        icon={<CloseOutlined />}
+                        size="small"
+                        style={{ position: 'absolute', top: 0, right: 0, margin: '2%' }}
+                        onClick={handleAtrasClick}
+                    />
+                    <AdminSucursal idsucursalx={currentSucursal} />
+                </div>
+            )}
+            <br />
+            <br />
+            <Drawer
+                title="Crear sucursal"
+                width={720}
+                onClose={onCloses}
+                open={opens}
+                styles={{
+                    body: {
+                        paddingBottom: 80,
+                    },
+                }}
             >
-                {ubicacionAltitud !== null && ubicacionLongitud !== null ? (
-                    <MapaActual latitud={ubicacionAltitud} longitud={ubicacionLongitud} onSaveCoordinates={handleSaveUbicacion} />
-                ) : (
-                    <>
-                        <MapaActual latitud={ubicacionAltitud} longitud={ubicacionLongitud} onSaveCoordinates={handleSaveUbicacion} />
-                        <p>No hay ubicación agregada. Selecciona tu ubicación.</p>
-                    </>
+                <CrearSucursal />
+            </Drawer>
+        </>
 
-
-                )}
-            </Modal>
-            <Modal
-                title="Crear Nueva Sucursal"
-                visible={modalVisible}
-                onCancel={handleCancel}
-                footer={null}
-            >
-                <Crearsucursal />
-            </Modal>
-        </div>
     );
 };
 

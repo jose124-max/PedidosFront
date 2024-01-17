@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Space, Button, Modal, Form, Input, message } from 'antd';
+import { Space, Table, Form, Card, Input, Pagination, Button, Select, Modal, Upload, Tooltip, Badge, Segmented, Avatar, Checkbox, notification, Drawer, Divider, Watermark, message } from 'antd';
+import { Row, Col } from 'react-bootstrap';
+import CrearBodegaForm from './crearbodega';
+import imgmesas from './res/imgmesas.png';
 
 const EditarBodegaForm = () => {
+    const [editModalVisible, setEditModalVisible] = useState(false);
     const [bodegas, setBodegas] = useState([]);
     const [visible, setVisible] = useState(false);
     const [editingBodega, setEditingBodega] = useState(null);
     const [form] = Form.useForm();
-
+    const [selectedOpcion, setSelectedOpcion] = useState('Bodegas');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [openp, setOpenp] = useState(false);
     const columns = [
         {
             title: 'ID de Sucursal',
@@ -33,18 +40,36 @@ const EditarBodegaForm = () => {
             ),
         },
     ];
+    const onClosep = () => {
+        setOpenp(false);
+    };
+
+    const Changueopcion = (value) => {
+        setSelectedOpcion(value);
+    }
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const showDrawerp = () => {
+        setOpenp(true);
+    };
 
     const handleEditar = (record) => {
         form.setFieldsValue(record);
-        setEditingBodega(record.id ? record : null);  // Asegurémonos de que record tiene un ID válido
+        setEditingBodega(record.id ? record : null);
         setVisible(true);
+        setEditModalVisible(true);
     };
 
     const handleCancelar = () => {
-        setVisible(false);
-        setEditingBodega(null);
+        fetchData(currentPage);
+        setEditingProductId(null);
+        setInitialFormValues(null);
+        setEditModalVisible(false);
     };
-
+    
     const handleGuardar = async () => {
         try {
             if (!editingBodega) {
@@ -53,7 +78,7 @@ const EditarBodegaForm = () => {
             }
 
             const values = await form.validateFields();
-            const response = await fetch(`https://pedidosbak-production.up.railway.app/bodega/editarBodega/${editingBodega.id}/`, {
+            const response = await fetch(`https://pedidosbak-production.up.railway.app/bodega/editar/${editingBodega.id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,7 +91,6 @@ const EditarBodegaForm = () => {
                 message.success(data.mensaje);
                 setVisible(false);
                 setEditingBodega(null);
-                cargarBodegas();
             } else {
                 const data = await response.json();
                 message.error(data.error || 'Error al editar la bodega');
@@ -76,9 +100,11 @@ const EditarBodegaForm = () => {
         }
     };
 
+
+
     const cargarBodegas = async () => {
         try {
-            const response = await fetch('https://pedidosbak-production.up.railway.app/bodega/listarBodega/');
+            const response = await fetch('https://pedidosbak-production.up.railway.app/bodega/listar/');
             const data = await response.json();
             setBodegas(data.bodegas);
         } catch (error) {
@@ -87,29 +113,80 @@ const EditarBodegaForm = () => {
     };
 
     useEffect(() => {
-        cargarBodegas();
-    }, []);
+        form.resetFields();
+        if (!editModalVisible) {
+            cargarBodegas(currentPage);
+        }
+    }, [bodegas]);
 
     return (
         <div>
-            <Table columns={columns} dataSource={bodegas} rowKey="id" />
-            <Modal
-                title="Editar Bodega"
-                visible={visible}
-                onCancel={handleCancelar}
-                onOk={handleGuardar}
-                okText="Guardar"
-                cancelText="Cancelar"
+            <Row>
+                <Col md={12}>
+                    <Segmented
+                        options={[
+                            {
+                                label: (
+                                    <Tooltip title="Bodegas">
+                                        <div style={{ padding: 4 }}>
+                                            <Avatar shape="square" src={imgmesas} size="large" />
+                                        </div>
+                                    </Tooltip>
+                                ),
+                                value: 'Bodegas',
+                            }
+                        ]}
+                        value={selectedOpcion}
+                        onChange={Changueopcion}
+                    />
+                </Col>
+                {selectedOpcion === 'Bodegas' && (
+                    <>
+                        <Divider>Control bodegas</Divider>
+                        <Col md={12}>
+                            <Button type="primary" style={{ width: '100%', margin: '2%' }} onClick={showDrawerp}>
+                                Crear nueva bodega
+                            </Button>
+                        </Col>
+                        <Col md={12}>
+                            <Row>
+                                <Table columns={columns} dataSource={bodegas} rowKey="id" />
+                                <Modal
+                                    title="Editar Bodega"
+                                    visible={visible}
+                                    onCancel={handleCancelar}
+                                    onOk={handleGuardar}
+                                    okText="Guardar"
+                                    cancelText="Cancelar"
+                                >
+                                    <Form form={form} layout="vertical">
+                                        <Form.Item label="Nombre de la Bodega" name="nombrebog">
+                                            <Input />
+                                        </Form.Item>
+                                        <Form.Item label="Descripción" name="descripcion">
+                                            <Input.TextArea />
+                                        </Form.Item>
+                                    </Form>
+                                </Modal>
+                            </Row>
+                            <Pagination current={currentPage} total={total} onChange={handlePageChange} pageSize={8} style={{ marginTop: '16px', textAlign: 'center' }} />
+                        </Col>
+                    </>
+                )}
+            </Row>
+            <Drawer
+                title="Crear Bodega"
+                width={720}
+                onClose={onClosep}
+                open={openp}
+                styles={{
+                    body: {
+                        paddingBottom: 80,
+                    },
+                }}
             >
-                <Form form={form} layout="vertical">
-                    <Form.Item label="Nombre de la Bodega" name="nombrebog">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Descripción" name="descripcion">
-                        <Input.TextArea />
-                    </Form.Item>
-                </Form>
-            </Modal>
+                <CrearBodegaForm />
+            </Drawer>
         </div>
     );
 };

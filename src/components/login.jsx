@@ -26,6 +26,7 @@ const LoginForm = ({ onLogin }) => {
 
           // Ejemplo de redirección basada en el rol
           if (rol === 'S') {
+            console.log('Aqui se llego');
             window.location.href = '/home';
           }
         } else {
@@ -37,13 +38,12 @@ const LoginForm = ({ onLogin }) => {
         console.error('Error en la solicitud:', error);
       }
     };
-
+ 
     // Llamar a la función fetchData al cargar el componente
     fetchData();
   }, []);
   const onFinish = async (values) => {
     try {
-      // Realizar la solicitud a la API para iniciar sesión
       const response = await fetch('https://pedidosbak-production.up.railway.app/Login/iniciar_sesion/', {
         method: 'POST',
         headers: {

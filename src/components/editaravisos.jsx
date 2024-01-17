@@ -14,7 +14,7 @@ const EditarAvisos = () => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [editAvisoId, setEditAvisoId] = useState(null);
-
+ 
   const obtenerAvisos = async () => {
     try {
       const response = await fetch('https://pedidosbak-production.up.railway.app/avisos/avisos/');
