@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Space, Button, Table, Modal, message, Switch, Form, Input } from 'antd';
 import mapa from './res/mapa.png';
 import AdminSucursal from './adminsucursal';
-import CrearSucursal from './CrearSucursal';
+import CrearSucursal from './crearsucursal';
 
 const ListSucursales = () => {
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ const ListSucursales = () => {
 
     const fetchData = () => {
         setLoading(true);
-        fetch('http://127.0.0.1:8000/sucursal/sucusarleslist/')
+        fetch('https://pedidosbak-production.up.railway.app/sucursal/sucusarleslist/')
             .then((response) => response.json())
             .then((data) => {
                 setSucursalesData(data.sucursales);
@@ -40,7 +40,7 @@ const ListSucursales = () => {
         const formData = new FormData();
         formData.append('id_sucursal', record.id_sucursal);
         formData.append('sestado', checked ? '1' : '0');
-        fetch('http://127.0.0.1:8000/sucursal/actsucursal/', {
+        fetch('https://pedidosbak-production.up.railway.app/sucursal/actsucursal/', {
             method: 'POST',
             body: formData,
         })
@@ -125,7 +125,7 @@ const ListSucursales = () => {
         form.validateFields()
             .then((values) => {
                 // Enviar los datos al servidor para crear la sucursal
-                fetch('http://127.0.0.1:8000/sucursal/crearsucursal/', {
+                fetch('https://pedidosbak-production.up.railway.app/sucursal/crearsucursal/', {
                     method: 'POST',
                     body: JSON.stringify(values),
                     headers: {
