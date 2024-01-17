@@ -18,7 +18,7 @@ const ListSucursales = () => {
 
     const fetchData = () => {
         setLoading(true);
-        fetch('https://pedidosbak-production.up.railway.app/sucursal/sucusarleslist/')
+        fetch('http://127.0.0.1:8000/sucursal/sucusarleslist/')
             .then((response) => response.json())
             .then((data) => {
                 setSucursalesData(data.sucursales);
@@ -40,7 +40,7 @@ const ListSucursales = () => {
         const formData = new FormData();
         formData.append('id_sucursal', record.id_sucursal);
         formData.append('sestado', checked ? '1' : '0');
-        fetch('https://pedidosbak-production.up.railway.app/sucursal/actsucursal/', {
+        fetch('http://127.0.0.1:8000/sucursal/actsucursal/', {
             method: 'POST',
             body: formData,
         })
@@ -124,7 +124,8 @@ const ListSucursales = () => {
     const handleCreateSucursal = () => {
         form.validateFields()
             .then((values) => {
-                fetch('https://pedidosbak-production.up.railway.app/sucursal/crearsucursal/', {
+                // Enviar los datos al servidor para crear la sucursal
+                fetch('http://127.0.0.1:8000/sucursal/crearsucursal/', {
                     method: 'POST',
                     body: JSON.stringify(values),
                     headers: {

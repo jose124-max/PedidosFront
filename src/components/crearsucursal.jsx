@@ -169,7 +169,7 @@ const Crearsucursal = () => {
                     name="telefono"
                     rules={[
                         {
-                            pattern: /^[0-9]+$/,
+                            pattern: /^[0-9]+$/, // Expresión regular que permite solo números
                             message: 'Por favor, ingresa solo números en el teléfono',
                         },
                         {
@@ -239,6 +239,7 @@ const Crearsucursal = () => {
                         { required: true, message: 'Por favor, sube una imagen' },
                         {
                             validator: (_, value) => {
+                                // Validar que el archivo subido sea una imagen
                                 const isValidImage = value && value.length > 0 && value[0].type.startsWith('image/');
                                 if (!isValidImage) {
                                     return Promise.reject('Por favor, sube solo archivos de imagen');
