@@ -4,7 +4,6 @@ import LoginForm from './components/login';
 import RegisterForm from './components/registro';
 import AdminMenu from './components/adminmenu';
 
-
 const App = () => {
   const [user, setUser] = useState(null);
 
