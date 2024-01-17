@@ -41,11 +41,12 @@ const RegistroForm = () => {
             });
 
             const data = await response.json();
-            console.log("aqui a 1 " + data);
+            console.log("aqui a 1 " + data); // Verifica si el token está presente en la respuesta
 
             if (response.ok) {
                 console.log("uwu");
             } else {
+                // Manejar errores de inicio de sesión
                 const errorMessage = data && data.message ? data.message : 'Error desconocido';
                 showError(errorMessage);
             }
@@ -118,7 +119,7 @@ const RegistroForm = () => {
                 rules={[{ required: true, message: 'Por favor, ingresa su numero de telefono' },
                 { max: 300, message: 'El número de teléfono no puede tener más de 300 caracteres' },
                 {
-                    pattern: /^[0-9]+$/,
+                    pattern: /^[0-9]+$/, // Expresión regular que permite solo números
                     message: 'Por favor, ingresa solo números en el teléfono',
                 },
                 {
@@ -234,7 +235,7 @@ const RegistroForm = () => {
                         rules={[
                             { max: 300, message: 'El documento no puede tener más de 300 caracteres' },
                             {
-                                pattern: /^[0-9]+$/,
+                                pattern: /^[0-9]+$/, // Expresión regular que permite solo números
                                 message: 'Por favor, ingresa solo números en el documento',
                             },
                             {

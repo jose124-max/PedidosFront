@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Upload, Table, Space, message, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
+// Función para convertir Base64 a URL de datos
 const base64ToUrl = (base64String, mimeType) => {
   return `data:${mimeType};base64,${base64String}`;
 };

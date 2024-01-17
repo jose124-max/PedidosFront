@@ -13,6 +13,7 @@ const LocationPicker = ({ onLocationSelect }) => {
 
   useEffect(() => {
     return () => {
+      // Limpiar recursos si es necesario
     };
   }, []);
 
@@ -44,6 +45,7 @@ const LocationPicker = ({ onLocationSelect }) => {
       setMarcador(newMarker);
       map.flyTo([center.lat, center.lng], map.getZoom());
 
+      // Llamar a la función de devolución de llamada del componente padre con las coordenadas
       onLocationSelect && onLocationSelect(newMarker.position);
     }
   };
@@ -62,6 +64,7 @@ const LocationPicker = ({ onLocationSelect }) => {
     const lng = parseFloat(inputLng);
   
     if (!isNaN(lat) && !isNaN(lng)) {
+      // Actualizar el estado coordenadas directamente
       setCoordenadas([lat, lng]);
   
       setMarcador({
@@ -69,6 +72,7 @@ const LocationPicker = ({ onLocationSelect }) => {
         position: [lat, lng],
       });
   
+      // Llamar a la función de devolución de llamada del componente padre con las coordenadas
       onLocationSelect && onLocationSelect([lat, lng]);
     }
   };

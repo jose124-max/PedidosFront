@@ -4,6 +4,7 @@ import { UploadOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
+// Función para convertir Base64 a URL de datos
 const base64ToUrl = (base64String, mimeType) => {
   return `data:${mimeType};base64,${base64String}`;
 };

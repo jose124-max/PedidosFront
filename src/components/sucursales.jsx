@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { UserOutlined, CloseOutlined } from '@ant-design/icons';
 import { Badge, Button, Card, Modal, message, Switch, Watermark, Tooltip, Result, Drawer } from 'antd';
 import { Row, Col } from 'react-bootstrap';
-import CrearSucursal from './crearsucursal';
+import CrearSucursal from './CrearSucursal';
 import mapa from './res/mapa.png';
 import MapaActual from './mapaactual';
 import Mapafijo from './mapafijo';
@@ -66,7 +66,7 @@ const Sucursales = () => {
                 setLoading(false);
                 setPagination({
                     ...pagination,
-                    total: data.total,
+                    total: data.total, // Total de filas sin paginación
                 });
             })
             .catch((error) => {

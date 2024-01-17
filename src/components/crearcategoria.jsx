@@ -22,10 +22,12 @@ const CrearCategoria = () => {
   };
 
   const handleOk = () => {
+    // Puedes realizar acciones adicionales aquí si es necesario
     setModalVisible(false);
   };
 
   const handleCancel = () => {
+    // Puedes realizar acciones adicionales aquí si es necesario
     setModalVisible(false);
   };
 
@@ -47,6 +49,7 @@ const CrearCategoria = () => {
 
   const handleChange = (info) => {
     if (info.fileList.length > 1) {
+      // Si hay más de un archivo en la lista, conserva solo el último
       info.fileList = [info.fileList.shift()];
     }
     setImagenCategoria(info.fileList.length > 0 ? info.fileList[0].originFileObj : null);
@@ -72,21 +75,28 @@ const CrearCategoria = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // Utilizando la notificación de Ant Design en lugar de message
         notification.success({
           message: 'Categoría creada con éxito',
+          // Puedes personalizar el contenido de la notificación según tus necesidades
         });
-        message.success('Categoría creada con éxito');
+
+        // Limpiar el formulario y la imagen después del éxito
         form.resetFields();
         setImagenCategoria(null);
+        // Puedes realizar otras acciones después de un éxito, si es necesario
       } else {
+        // Utilizando la notificación de Ant Design en lugar de message
         notification.error({
           message: data.error || 'Hubo un error al realizar la solicitud',
+          // Puedes personalizar el contenido de la notificación según tus necesidades
         });
       }
     } catch (error) {
-
+      // Utilizando la notificación de Ant Design en lugar de message
       notification.error({
         message: 'Hubo un error al realizar la solicitud',
+        // Puedes personalizar el contenido de la notificación según tus necesidades
       });
     } finally {
       setLoading(false);

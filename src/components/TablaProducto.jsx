@@ -20,6 +20,7 @@ const TablaPro = () => {
     const [isReportModalVisible, setIsReportModalVisible] = useState(false);
     const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
 
+    // Función para obtener los datos de la API
     const fetchData = async () => {
         try {
             const response = await fetch('https://pedidosbak-production.up.railway.app/producto/listar/');
@@ -31,8 +32,8 @@ const TablaPro = () => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        fetchData();  // Llamada a la API al montar el componente
+    }, []);  // El segundo parámetro [] asegura que useEffect se ejecute solo una vez al montar el componente
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -66,15 +67,20 @@ const TablaPro = () => {
     
             console.log('Datos actualizados:', updatedData);
     
+            // Supongamos que tu backend tiene una función updateProduct
             const updatedProduct = updatedData.find(item => item.key === selectedRecord.key);
     
+            // Llama a la función updateProduct para actualizar el producto en el backend
             await updateProduct(updatedProduct);
     
             console.log('Producto actualizado en el backend');
+            // Actualiza el estado con los datos actualizados si es necesario
             setData(updatedData);
             setIsModalVisible(false);
         } catch (error) {
             console.error('Error al actualizar el producto:', error);
+            // Maneja el error de validación de campos (mostrar mensaje de error, etc.)
+            // o cualquier otro error que pueda ocurrir durante la actualización
         }
     };
     
@@ -113,11 +119,13 @@ const TablaPro = () => {
     };
 
     const handleDownloadPDF = () => {
+        // Lógica para descargar como PDF
         console.log('Descargando como PDF');
         setIsReportModalVisible(false);
     };
 
     const handleDownloadExcel = () => {
+        // Lógica para descargar como Excel
         console.log('Descargando como Excel');
         setIsReportModalVisible(false);
     };
