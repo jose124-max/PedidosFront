@@ -55,15 +55,12 @@ const Mesas = () => {
         .catch(error => console.error('Error al obtener las mesas:', error));
 
       hideModal();
-<<<<<<< HEAD
 
       // Mostrar mensaje de éxito
-=======
-      
->>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
       message.success('Mesa editada con éxito');
     } catch (error) {
       console.error('Error al editar la mesa:', error);
+      // Mostrar mensaje de error
       message.error('Error al editar la mesa');
     }
   };
@@ -123,6 +120,7 @@ const Mesas = () => {
       dataIndex: 'estado',
       key: 'estado',
       render: estado => {
+        // Mapear valores de estado
         const estadoMapping = {
           'D': 'Disponible',
           'R': 'Reservada',

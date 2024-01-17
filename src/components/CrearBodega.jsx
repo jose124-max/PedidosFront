@@ -29,11 +29,7 @@ const CrearBodegaForm = () => {
   const onFinish = async (values) => {
     try {
       setLoading(true);
-<<<<<<< HEAD
-      const response = await fetch('https://pedidosbak-production.up.railway.app/bodega/crear/', {
-=======
       const response = await fetch('http://pedidosbak-production.up.railway.app/bodega/crear/', {
->>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -149,10 +149,6 @@ const NuevoComboForm = () => {
                 comboForm.resetFields();
                 setComboFileList([]);
                 setSelectedProducts([]);
-<<<<<<< HEAD
-=======
-
->>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
             } else {
                 const data = await response.json();
                 console.error('Error en la respuesta del servidor:', data);

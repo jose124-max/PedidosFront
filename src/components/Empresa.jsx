@@ -100,13 +100,8 @@ const Empresa = () => {
       });
   
       if (respuesta.ok) {
-<<<<<<< HEAD
         message.success('Datos de la empresa actualizados correctamente'); // Mensaje de éxito
         onClosee(false);
-=======
-        message.success('Datos de la empresa actualizados correctamente');
-        setEditModalVisible(false);
->>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
         obtenerInformacionEmpresa();
         window.location.href = '/home';
       } else {

@@ -72,31 +72,21 @@ const CrearCategoria = () => {
       const data = await response.json();
 
       if (response.ok) {
-<<<<<<< HEAD
-        // Utilizando la notificación de Ant Design en lugar de message
         notification.success({
           message: 'Categoría creada con éxito',
-          // Puedes personalizar el contenido de la notificación según tus necesidades
         });
-
-        // Limpiar el formulario y la imagen después del éxito
-=======
         message.success('Categoría creada con éxito');
->>>>>>> 777b8a1edfef1dc28b1b4e984052a7d8f60713ea
         form.resetFields();
         setImagenCategoria(null);
       } else {
-        // Utilizando la notificación de Ant Design en lugar de message
         notification.error({
           message: data.error || 'Hubo un error al realizar la solicitud',
-          // Puedes personalizar el contenido de la notificación según tus necesidades
         });
       }
     } catch (error) {
-      // Utilizando la notificación de Ant Design en lugar de message
+
       notification.error({
         message: 'Hubo un error al realizar la solicitud',
-        // Puedes personalizar el contenido de la notificación según tus necesidades
       });
     } finally {
       setLoading(false);
